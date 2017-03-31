@@ -12,6 +12,7 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu52 zlib1g-dev gi
     && docker-php-ext-install zip \
     && docker-php-ext-install curl \
     && docker-php-ext-install gd \
+    && docker-php-ext-install opcache \
     && requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
     && apt-get purge --auto-remove -y $requirementsToRemove \
     && rm -rf /var/lib/apt/lists/*
