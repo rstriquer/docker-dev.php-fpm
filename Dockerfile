@@ -11,11 +11,19 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu52 zlib1g-dev gi
     && docker-php-ext-install json \
     && docker-php-ext-install zip \
     && docker-php-ext-install curl \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
-    && docker-php-ext-install opcache \
-    && requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
-    && apt-get purge --auto-remove -y $requirementsToRemove \
-    && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install opcache
+
+#install Imagemagick & PHP Imagick ext
+RUN apt-get update && apt-get install -y \
+        libmagickwand-dev --no-install-recommends
+
+RUN pecl install imagick && docker-php-ext-enable imagick
+
+#RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
+#    && apt-get purge --auto-remove -y $requirementsToRemove \
+#    && rm -rf /var/lib/apt/lists/*
 
 #install composer globally
 RUN curl -sSL https://getcomposer.org/installer | php \
