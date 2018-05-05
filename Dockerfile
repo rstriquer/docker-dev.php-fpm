@@ -37,10 +37,10 @@ COPY config/php-fpm.conf /usr/local/etc/
 COPY config/php.ini /usr/local/etc/php/
 
 # Setup Volume
-VOLUME ["/usr/share/nginx/html"]
+VOLUME ["/var/www/"]
 
 #Set Workdir
-WORKDIR /usr/share/nginx/html
+WORKDIR /var/www/
 
 #Add entrypoint
 COPY docker-entrypoint.sh /entrypoint.sh
