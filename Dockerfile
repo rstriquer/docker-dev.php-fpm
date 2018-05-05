@@ -2,7 +2,7 @@ FROM php:7.2-fpm
 MAINTAINER Oleg Kopachovets <ok@procoders.tech>
 
 #install laravel requirements and aditional extensions
-RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu52 zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng12-dev" \
+RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu55 zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng12-dev" \
     && apt-get update && apt-get install -y $requirements \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mcrypt \
