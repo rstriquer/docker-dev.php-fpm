@@ -5,7 +5,6 @@ MAINTAINER Oleg Kopachovets <ok@procoders.tech>
 RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev" \
     && apt-get update && apt-get install -y $requirements \
     && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install mcrypt \
     && docker-php-ext-install mbstring \
     && docker-php-ext-install intl \
     && docker-php-ext-install json \
@@ -19,7 +18,7 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 zlib1g-dev git libcurl
 RUN apt-get update && apt-get install -y \
         libmagickwand-dev --no-install-recommends
 
-RUN pecl install imagick && docker-php-ext-enable imagick
+RUN pecl install imagick && pecl install mcrypt-1.0.1 && docker-php-ext-enable imagick && docker-php-ext-configure mcrypt && docker-php-ext-install mcrypt
 
 #RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
 #    && apt-get purge --auto-remove -y $requirementsToRemove \
