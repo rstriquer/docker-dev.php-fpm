@@ -18,7 +18,7 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 zlib1g-dev git libcurl
 RUN apt-get update && apt-get install -y \
         libmagickwand-dev --no-install-recommends
 
-RUN pecl install imagick && pecl install mcrypt-1.0.1 && docker-php-ext-enable imagick && docker-php-ext-enable mcrypt
+RUN pecl install imagick && docker-php-ext-enable imagick
 
 #RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
 #    && apt-get purge --auto-remove -y $requirementsToRemove \
