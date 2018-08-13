@@ -10,7 +10,7 @@ ImageLayers : [![](https://badge.imagelayers.io/camil/php-fpm:latest.svg)](https
 
 ## Info
 
-* Based on php:5.6-fpm official Image [php:5.6-fpm](https://hub.docker.com/_/php/)
+* Based on php:7.0-fpm official Image [php:7.0-fpm](https://hub.docker.com/_/php/)
 
         
 
@@ -26,5 +26,7 @@ For example, if you need to install or remove php extensions, edit the Dockerfil
 
 	docker pull camil/php-fpm
 	docker run --rm -d camil/php-fpm
+	
+Special for @Fessnik
 
 
