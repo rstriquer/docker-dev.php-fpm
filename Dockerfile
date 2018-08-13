@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.0-fpm
 MAINTAINER Oleg Kopachovets <ok@procoders.tech>
 
 #install laravel requirements and aditional extensions
