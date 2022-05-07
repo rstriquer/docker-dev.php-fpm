@@ -4,15 +4,11 @@
 ```ready for laravel and cakePHP frameworks ```
 
 
-
-ImageLayers : [![](https://badge.imagelayers.io/camil/php-fpm:latest.svg)](https://imagelayers.io/?images=camil/php-fpm:latest)
-
-
 ## Info
 
-* Based on php:7.0-fpm official Image [php:7.0-fpm](https://hub.docker.com/_/php/)
+* Based on php:7.3-fpm official Image [php:7.3-fpm](https://hub.docker.com/_/php/)
+* Build upon [copeus/docker-php-fpm](https://github.com/copeus/docker-php-fpm) work
 
-        
 
 ## Build
 
@@ -20,13 +16,14 @@ For example, if you need to install or remove php extensions, edit the Dockerfil
 
 	git clone git@github.com:camilb/docker-php-fpm.git
 	cd ./docker-php-fpm
-	docker build --rm -t camil/php-fpm .
+    git checkout v7.3
+	docker build --rm -t rstriquer/php-fpm.dev:7.3 .
 
 ## Usage
 
-	docker pull camil/php-fpm
-	docker run --rm -d camil/php-fpm
-	
-Special for @Fessnik
+	docker pull rstriquer/php-fpm.dev:7.3
+	docker run --rm -d rstriquer/php-fpm.dev:7.3
+
+
 
 
