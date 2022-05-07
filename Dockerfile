@@ -1,10 +1,13 @@
-FROM php:7.0-fpm
-MAINTAINER Oleg Kopachovets <ok@procoders.tech>
+# To build just run: docker build -t rstriquer/php-fpm.dev:7.3 .
+FROM php:7.3-fpm
+LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
+
+RUN echo "UTC" > /etc/timezone
 
 #install laravel requirements and aditional extensions
-RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev" \
+RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libzip-dev zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev" \
     && apt-get update && apt-get install -y $requirements \
-    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install pdo pdo_mysql \
     && docker-php-ext-install mbstring \
     && docker-php-ext-install intl \
     && docker-php-ext-install json \
@@ -18,11 +21,8 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 zlib1g-dev git libcurl
 RUN apt-get update && apt-get install -y \
         libmagickwand-dev --no-install-recommends
 
+RUN yes | pecl install xdebug
 RUN pecl install imagick && docker-php-ext-enable imagick
-
-#RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev zlib1g-dev" \
-#    && apt-get purge --auto-remove -y $requirementsToRemove \
-#    && rm -rf /var/lib/apt/lists/*
 
 #install composer globally
 RUN curl -sSL https://getcomposer.org/installer | php \
@@ -35,6 +35,7 @@ COPY config/php-fpm.conf /usr/local/etc/
 
 #add custom php.ini
 COPY config/php.ini /usr/local/etc/php/
+COPY config/xdebug.ini /usr/local/etc/php/conf.d
 
 # Setup Volume
 VOLUME ["/var/www/"]
