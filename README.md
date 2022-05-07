@@ -17,7 +17,7 @@ For example, if you need to install or remove php extensions, edit the Dockerfil
 	git clone git@github.com:camilb/docker-php-fpm.git
 	cd ./docker-php-fpm
     git checkout v7.3
-	docker build --rm -t rstriquer/php-fpm.dev:7.3 .
+	docker build --rm -t --no-cache rstriquer/php-fpm.dev:7.3 .
 
 ## Usage
 
