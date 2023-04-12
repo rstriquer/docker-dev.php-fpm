@@ -1,5 +1,5 @@
 # To build just run: docker build -t rstriquer/php-fpm.dev:7.3 .
-FROM php:7.3-fpm
+FROM php:8.1-fpm
 LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
 
 RUN echo "UTC" > /etc/timezone
@@ -19,7 +19,7 @@ RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libzip-dev zlib1g-dev 
 
 #install Imagemagick & PHP Imagick ext
 RUN apt-get update && apt-get install -y \
-        libmagickwand-dev --no-install-recommends
+    libmagickwand-dev --no-install-recommends
 
 RUN yes | pecl install xdebug
 RUN pecl install imagick && docker-php-ext-enable imagick
