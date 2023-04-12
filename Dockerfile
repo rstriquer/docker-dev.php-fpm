@@ -1,5 +1,5 @@
-# To build just run: docker build -t rstriquer/php-fpm.dev:7.3 .
-FROM php:8.1-fpm
+# To build just run: docker build -t rstriquer/php-fpm.dev:8.2-dev .
+FROM php:8.2-fpm
 LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
 
 RUN echo "UTC" > /etc/timezone
