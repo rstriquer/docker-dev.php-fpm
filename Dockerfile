@@ -4,25 +4,34 @@ LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
 
 RUN echo "UTC" > /etc/timezone
 
-#install laravel requirements and aditional extensions
-RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libzip-dev zlib1g-dev git libcurl4-openssl-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev" \
-    && apt-get update && apt-get install -y $requirements \
-    && docker-php-ext-install pdo pdo_mysql \
-    && docker-php-ext-install mbstring \
-    && docker-php-ext-install intl \
-    && docker-php-ext-install json \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install curl \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install opcache
+RUN apt-get update && apt-get install -y apt-utils && apt-get update
 
-#install Imagemagick & PHP Imagick ext
-RUN apt-get update && apt-get install -y \
-    libmagickwand-dev --no-install-recommends
+RUN apt install -y curl libmemcached-dev libz-dev libpq-dev libjpeg-dev \
+    libpng-dev libfreetype6-dev libssl-dev libwebp-dev libxpm-dev \
+    libmcrypt-dev libonig-dev build-essential libncurses5-dev zlib1g-dev \
+    libnss3-dev libgdbm-dev libsqlite3-dev libffi-dev libreadline-dev \
+    libbz2-dev
+
+# @see https://laracasts.com/discuss/channels/laravel/install-imagemagick-on-docker
+# RUN apt-get install -y ghostscript;
+# RUN apt-get install -y libmagickwand-dev --no-install-recommends
+
+RUN rm -rf /var/lib/apt/lists/*
+
+
+RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-configure gd \
+    --prefix=/usr \
+    --with-jpeg \
+    --with-webp \
+    --with-xpm \
+    --with-freetype; \
+    docker-php-ext-install gd;
 
 RUN yes | pecl install xdebug
-RUN pecl install imagick && docker-php-ext-enable imagick
+
+# RUN pecl install imagick-6.9 && docker-php-ext-enable imagick
+# RUN sed -i 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
 
 #install composer globally
 RUN curl -sSL https://getcomposer.org/installer | php \
@@ -34,7 +43,7 @@ RUN rm -v /usr/local/etc/php-fpm.conf
 COPY config/php-fpm.conf /usr/local/etc/
 
 #add custom php.ini
-COPY config/php.ini /usr/local/etc/php/
+# COPY config/php.ini /usr/local/etc/php/
 COPY config/xdebug.ini /usr/local/etc/php/conf.d
 
 # Setup Volume
