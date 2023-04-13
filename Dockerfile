@@ -1,57 +1,38 @@
-# To build just run: docker build --no-cache --rm --build-arg USER=$USER --build-arg UID=$UID --build-arg GID=$UID -t rstriquer/php-fpm.dev:8.2-dev .
-FROM php:8.2-fpm
-LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
-
-ARG USER
-ARG UID
-ARG GID
-
-RUN addgroup --gid $GID $USER
-RUN adduser --disabled-password --disabled-login --no-create-home --gecos "" --gid $GID --uid $UID $USER
-
-RUN echo "UTC" > /etc/timezone
-
-RUN apt-get update && apt-get install -y apt-utils && apt-get update
-
-RUN apt install -y curl libmemcached-dev libz-dev libpq-dev libjpeg-dev \
-    libpng-dev libfreetype6-dev libssl-dev libwebp-dev libxpm-dev \
-    libmcrypt-dev libonig-dev build-essential libncurses5-dev zlib1g-dev \
-    libnss3-dev libgdbm-dev libsqlite3-dev libffi-dev libreadline-dev \
-    libbz2-dev
-
+# Build php8.2-fpm from alpine package
+# To build just run: docker build --no-cache --rm --build-arg user=$USER --build-arg uid=$UID --build-arg gid=$UID -t rstriquer/php-fpm.dev:8.2-dev .
+# @todo install imagick and/or jd
 # @see https://laracasts.com/discuss/channels/laravel/install-imagemagick-on-docker
 # RUN apt-get install -y ghostscript;
 # RUN apt-get install -y libmagickwand-dev --no-install-recommends
 
-RUN rm -rf /var/lib/apt/lists/*
+FROM php:8.2-fpm-alpine3.17
 
+ARG user
+ARG uid
+ARG gid
 
-RUN docker-php-ext-install pdo pdo_mysql
-RUN docker-php-ext-configure gd \
-    --prefix=/usr \
-    --with-jpeg \
-    --with-webp \
-    --with-xpm \
-    --with-freetype; \
-    docker-php-ext-install gd;
+ENV XDEBUG_MODE=debug,trace
+ENV XDEBUG_CONFIG=""
 
-RUN yes | pecl install xdebug
+RUN echo "UTC" > /etc/timezone
+RUN addgroup -g $gid $user && \
+    adduser --disabled-password --gecos "" -G $user -u $uid -h /home/$user $user
+RUN apk add --no-cache --update bash linux-headers
+RUN sed -i 's/bin\/ash/bin\/bash/g' /etc/passwd
 
-# RUN pecl install imagick-6.9 && docker-php-ext-enable imagick
-# RUN sed -i 's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
+RUN set -xe && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS
+RUN set -xe && apk add --no-cache --update --virtual zip unzip curl npm \
+    autoconf g++ libtool make icu-dev
+RUN pecl install redis && docker-php-ext-enable redis
+RUN docker-php-ext-install pdo_mysql opcache pcntl bcmath
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
-#install composer globally
-RUN curl -sSL https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
+COPY --from=composer:2.5.5 /usr/bin/composer /usr/bin/composer
 
-#replace default php-fpm config
-RUN rm -v /usr/local/etc/php-fpm.conf
-
-COPY config/php-fpm.conf /usr/local/etc/
-
-#add custom php.ini
-COPY config/php.ini /usr/local/etc/php/
-COPY config/xdebug.ini /usr/local/etc/php/conf.d
+RUN apk del autoconf bash binutils file g++ gcc gmp libatomic libbz2 libc-dev \
+    libgcc libgomp libltdl libmagic libstdc++ libtool m4 make mpc1 musl-dev \
+    perl pkgconf pkgconfig re2c readline sqlite-libs
+RUN rm -rf /tmp/* /var/cache/apk/*
 
 # Setup Volume
 VOLUME ["/var/www/"]
@@ -59,15 +40,9 @@ VOLUME ["/var/www/"]
 #Set Workdir
 WORKDIR /var/www/
 
-#Add entrypoint
-COPY docker-entrypoint.sh /entrypoint.sh
-
 USER $user
 
 EXPOSE 9000
 EXPOSE 9003
 
-ENTRYPOINT ["/entrypoint.sh"]
-
 CMD ["php-fpm"]
-
