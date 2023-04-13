@@ -43,7 +43,7 @@ RUN rm -v /usr/local/etc/php-fpm.conf
 COPY config/php-fpm.conf /usr/local/etc/
 
 #add custom php.ini
-# COPY config/php.ini /usr/local/etc/php/
+COPY config/php.ini /usr/local/etc/php/
 COPY config/xdebug.ini /usr/local/etc/php/conf.d
 
 # Setup Volume
