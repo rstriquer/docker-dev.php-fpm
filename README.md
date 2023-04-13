@@ -20,4 +20,4 @@ For example, if you need to install or remove php extensions, edit the Dockerfil
     docker pull rstriquer/php-fpm.dev:8.2-dev
     docker run --rm -d rstriquer/php-fpm.dev:8.2-dev
 
-PS: The working directory is '/var/www/'
+PS: The default working directory is '/var/www/'
