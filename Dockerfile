@@ -1,6 +1,13 @@
-# To build just run: docker build -t rstriquer/php-fpm.dev:8.2-dev .
+# To build just run: docker build --no-cache --rm --build-arg USER=$USER --build-arg UID=$UID --build-arg GID=$UID -t rstriquer/php-fpm.dev:8.2-dev .
 FROM php:8.2-fpm
 LABEL org.opencontainers.image.authors="https://github.com/rstriquer"
+
+ARG USER
+ARG UID
+ARG GID
+
+RUN addgroup --gid $GID $USER
+RUN adduser --disabled-password --disabled-login --no-create-home --gecos "" --gid $GID --uid $UID $USER
 
 RUN echo "UTC" > /etc/timezone
 
@@ -54,6 +61,11 @@ WORKDIR /var/www/
 
 #Add entrypoint
 COPY docker-entrypoint.sh /entrypoint.sh
+
+USER $user
+
+EXPOSE 9000
+EXPOSE 9003
 
 ENTRYPOINT ["/entrypoint.sh"]
 
