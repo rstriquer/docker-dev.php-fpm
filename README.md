@@ -4,8 +4,7 @@
 
 ## Info
 
-- Based on php:8.2-fpm official Image [php:8.2-fpm](https://hub.docker.com/_/php/)
-- Build upon [copeus/docker-php-fpm](https://github.com/copeus/docker-php-fpm) work
+- Based on php:8.2-fpm-alpine3.17 official Image [php:8.2-fpm-alpine3.17](https://hub.docker.com/_/php/)
 
 ## Build
 
