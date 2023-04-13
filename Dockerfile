@@ -7,9 +7,9 @@
 
 FROM php:8.2-fpm-alpine3.17
 
-ARG user
-ARG uid
-ARG gid
+ARG user=docker
+ARG uid=1000
+ARG gid=1000
 
 ENV XDEBUG_MODE=debug,trace
 ENV XDEBUG_CONFIG=""
